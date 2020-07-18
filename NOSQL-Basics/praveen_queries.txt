@@ -1,0 +1,24 @@
+1)Find all hotels with ratings for Cleanliness>=4.
+ 
+ select name 
+ from `travel-sample` as t 
+ where type="hotel" and reviews[0].ratings.Cleanliness>=4;
+
+2) Find the highest airport in each country
+
+ select t.airportname, t.country
+ from `travel-sample` t
+ join
+ (select country, max(s.geo.alt) as max_height, from `travel-sample s
+ where s.type="airport group by s.country) as max_alt_list
+ on t.country = max_alt_list.country
+ where 
+ t.type="airport" and t.geo.alt= max_alt_list.max_alt
+
+3) Find all routes operated by Air France from the city of Marseille. (use field faa).
+
+ select meta(a).id as route_id 
+ from `travel-sample` a
+ where a.sourceairport IN (select RAW faa from `travel-sample` where city = "Marseille");
+ and a.airline IN (select RAW iata from `travel-sample` where name = "Air France")
+ 
