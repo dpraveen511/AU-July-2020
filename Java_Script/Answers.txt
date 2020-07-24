@@ -1,0 +1,154 @@
+Task :1
+--------------------------------------------------------------------------------------------------------------------------
+var a=[1,2,5,43,6,34,45,9,2,7];
+var b=[100,99,98];
+a.concat(b)= (13) [1, 2, 5, 43, 6, 34, 45, 9, 2, 7, 100, 99, 98]
+
+a.every((val)=> {return val>0}); true
+a.every((val)=> {return val>10}); false
+
+a.filter((val)=>{return val%2==0}); (4) [2, 6, 34, 2]
+
+a.forEach((item,index)=>console.log("value:"+item+" index:"+index));
+value:1 index:0
+value:2 index:1
+value:5 index:2
+value:43 index:3
+value:6 index:4
+value:34 index:5
+value:45 index:6
+value:9 index:7
+value:2 index:8
+value:7 index:9  //forEach doesnot change the value of the array a
+
+a.indexOf(10); -1
+a.indexOf(2); 1
+
+a.join(); "1,2,5,43,6,34,45,9,2,7"
+
+a.lastIndexOf(2); 8
+
+a=a.map((val)=>{return val/2});(10) [0.5, 1, 2.5, 21.5, 3, 17, 22.5, 4.5, 1, 3.5] //map() returns a new array
+
+a.pop(); 3.5
+console.log(a); (9) [0.5, 1, 2.5, 21.5, 3, 17, 22.5, 4.5, 1]
+
+a.push(100); 10
+console.log(a); (10) [0.5, 1, 2.5, 21.5, 3, 17, 22.5, 4.5, 1, 100]
+
+a.reduce((total,val)=>{return total+val}); 173.5
+a.reduce((total,val)=>{return total-val}); -172.5 //Subtract the numbers in the array, starting from the beginning
+
+a.reduceRight((total,val)=>{return total-val}); 26.5 //Subtract from the last
+
+a.reverse(); (10) [100, 1, 4.5, 22.5, 17, 3, 21.5, 2.5, 1, 0.5]
+console.log(a); (10) [100, 1, 4.5, 22.5, 17, 3, 21.5, 2.5, 1, 0.5]
+
+a.shift(); 100
+console.log(a); (9) [1, 4.5, 22.5, 17, 3, 21.5, 2.5, 1, 0.5]
+
+var c=a.slice(2,5);
+console.log(c); (3) [22.5, 17, 3]
+
+a.some((val)=> {return val/0.5}); true
+a.some((val)=> {return val<0}); false
+
+a.toSource(); //Not supported by Chrome
+
+a.sort((a,b)=>{return a-b}); (9) [0.5, 1, 1, 2.5, 3, 4.5, 17, 21.5, 22.5] //ascending order
+a.sort((a,b)=>{return b-a}); (9) [22.5, 21.5, 17, 4.5, 3, 2.5, 1, 1, 0.5] //descending order
+
+a.splice(2,4);(4) [17, 4.5, 3, 2.5] //deletes four elements from index 2
+console.log(a); (5) [22.5, 21.5, 1, 1, 0.5]
+a.splice(1,0,99,99); //deletes 0 elements from index 1 and inserts 99,99 at index 1
+console.log(a); (7) [22.5, 99, 99, 21.5, 1, 1, 0.5]
+
+a.toString(); "22.5,99,99,21.5,1,1,0.5"
+
+a.unshift(111,11);
+console.log(a); (9) [111, 11, 22.5, 99, 99, 21.5, 1, 1, 0.5]
+
+-----------------------------------------------------------------------------------------------------------
+Task:2 Difference between /r and /n
+
+The difference between /r and /n can be understood in the context of a old printer which is typically as electrical type writer. They have 
+a separate command to move the paper up one line to a new line(\n), and a separate command for returning the carriage back to the left margin(\r).
+For example "abc\r\n def" will print:
+abc
+def
+where as "abc\n def" will print
+abc
+   def        //new line didnot start from the left margin.
+
+But the difference became irrelevant now a days. Only a few machines support \r. A simple c code  using \r:
+main()
+{
+printf("abcdef");
+printf("\rhij");
+}
+
+Output: hijdef
+---------------------------------------------------------------------------------------------------------------
+Task:3 
+var add=(function (){
+    var counter=0;
+    return function(){return counter +=1;}
+})()
+
+add(); //1
+add(); //2
+add(); //3
+
+Explanation: In JavaScript, when a function finishes executing, any variables declared within its body is
+deleted from memory. There is a () at the end, that means we invoked the function we just declared. So "add"
+is assigned the return value of function. But this return fucntion has access to the var 'counter'. 
+Even though the function has returned already,  returned object still references variables of the function.
+ So,these variables become long lived and will not be destroyed. 
+So when we call add() , it can access 'counter' and increase it by 1.
+
+-------------------------------------------------------------------------------------------------------------------
+Task :4
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h2>Part 1: Enter a string to check the regular expression mathcing</h2>
+    <input type="text" placeholder="Enter your text here" id="mystring">
+    <button type="button" onclick="boo()">Check</button>
+    <h3 id="demo"></h3>
+    <h2> Part 2: Click the button to show the results</h2>
+    <button type="button" onclick="foo()">Click</button> 
+    <h3 id="p1"></h3>
+    <h3 id="p2"></h3>
+    <h3 id="p3"></h3>
+    <h3 id="p4"></h3>
+
+    <script>
+        var inputVal;
+        function boo(){
+            inputVal=document.getElementById("mystring").value;
+            reg=/^[hdn]ot.*[hdn]o+t$/;
+        
+        document.getElementById("demo").innerHTML=reg.test(inputVal);
+        }
+        function foo(){
+            var arr=[1,2,4,7,9,10,12,45,67];
+            arr.sort(function(a, b){return a - b});
+            document.getElementById("p1").innerHTML="Sorted array:       "+arr;
+            arr=arr.filter((item)=>item>10);
+            document.getElementById("p2").innerHTML="Greater than 10: "+arr;
+            arr=arr.map(function(item){return item+1});
+            document.getElementById("p3").innerHTML="Add 1: "+arr;
+            document.getElementById("p4").innerHTML="1 to 4: "+arr.slice(1,4); 
+        }
+    
+        
+    </script>
+</body>
+</html>
+

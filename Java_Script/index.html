@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h2>Part 1: Enter a string to check the regular expression mathcing</h2>
+    <input type="text" placeholder="Enter your text here" id="mystring">
+    <button type="button" onclick="boo()">Check</button>
+    <h3 id="demo"></h3>
+    <h2> Part 2: Click the button to show the results</h2>
+    <button type="button" onclick="foo()">Click</button> 
+    <h3 id="p1"></h3>
+    <h3 id="p2"></h3>
+    <h3 id="p3"></h3>
+    <h3 id="p4"></h3>
+
+    <script>
+        var inputVal;
+        function boo(){
+            inputVal=document.getElementById("mystring").value;
+            reg=/^[hdn]ot.*[hdn]o+t$/;
+        
+        document.getElementById("demo").innerHTML=reg.test(inputVal);
+        }
+        function foo(){
+            var arr=[1,2,4,7,9,10,12,45,67,15,78];
+            arr.sort(function(a, b){return a - b});
+            document.getElementById("p1").innerHTML="Sorted array:       "+arr;
+            arr=arr.filter((item)=>item>10);
+            document.getElementById("p2").innerHTML="Greater than 10: "+arr;
+            arr=arr.map(function(item){return item+1});
+            document.getElementById("p3").innerHTML="Add 1: "+arr;
+            document.getElementById("p4").innerHTML="1 to 4: "+arr.slice(1,5); 
+        }
+    
+        
+    </script>
+</body>
+</html>
