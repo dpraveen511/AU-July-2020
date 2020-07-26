@@ -1,0 +1,31 @@
+<div>
+    <form [formGroup]="editform" (ngSubmit)="onSubmit()">
+        <label>
+            Employee id:(*Should only be a number)
+           
+            <input type="text" formControlName="empId" [placeholder]="popservice.users[index].empId">
+          </label>
+          <label>
+              First Name:(*Must Enter the name)
+              
+              <input type="text" formControlName="firstName" [placeholder]="popservice.users[index].firstName">
+            </label>
+            <label>
+                Last Name:
+                <input type="text" formControlName="lasttName" [placeholder]="popservice.users[index].lasttName">
+            </label>
+            <label>
+                Age:
+                <input type="text" formControlName="age" [placeholder]="popservice.users[index].age">
+            </label>
+          <label>
+            City:
+            <input type="text" formControlName="city" [placeholder]="popservice.users[index].city" >
+          </label>
+          <div>Form status :{{editform.status}}</div>
+            <button type="submit" [disabled]="!editform.valid">Submit</button>
+          
+    </form>
+
+    <ng-content></ng-content>
+</div>

@@ -1,0 +1,30 @@
+<h2>Add New User Details</h2>
+<div>
+    <form [formGroup]="addform" (ngSubmit)="onSubmit()">
+        <label>
+            Employee id: (*Should be a number)
+            <input type="text" formControlName="empId" >
+          </label>
+          <label>
+              First Name: (* Must Enter the name)
+              <input type="text" formControlName="firstName">
+            </label>
+            <label>
+                Last Name:
+                <input type="text" formControlName="lasttName">
+            </label>
+            <label>
+                Age:
+                <input type="text" formControlName="age">
+            </label>
+          <label>
+            City:
+            <input type="text" formControlName="city"  >
+          </label>
+          <div>Form status :{{addform.status}}</div>
+            <button type="submit" [disabled]="!addform.valid">Submit</button>
+          
+    </form>
+
+    <ng-content></ng-content>
+</div>

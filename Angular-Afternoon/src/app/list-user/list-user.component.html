@@ -1,0 +1,44 @@
+<div>
+    <h2>User Details:</h2>
+    
+    <button (click)="onAdd()" style="background-color: red;font-weight:600 ;float:left;font-size: 24px;"> Add User</button>
+    <table>
+        <thead>
+            <tr>
+                <th class="th" style="background-color: rgb(211, 211, 211);"> ID</th>
+                <th class="th"style="background-color: rgb(211, 211, 211);">First Name</th>
+                <th class="th"style="background-color: rgb(211, 211, 211);">Last Name</th>
+                <th class="th"style="background-color: rgb(211, 211, 211);">Age</th>
+                <th class="th"style="background-color: rgb(211, 211, 211);">City</th>
+                <th class="th"style="background-color: rgb(211, 211, 211);">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let user of popservice.users">
+            <td class="td">{{user.empId |number}}</td>
+            <td class="td">{{user.firstName}}</td>
+            <td class="td">{{user.lasttName}}</td>
+            <td class="td">{{user.age | number}}</td>
+            <td class="td">{{user.city}}</td>
+            <td class="td"><button (click)="onDelete(user.empId)"> Delete</button>
+                <button (click)="onedit(user.empId)" style="margin-left: 20px;"> Edit</button></td>
+         
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<div *ngIf="popservice.ShowDialog" style="display: block;">
+    <div style="position: fixed; top:0; right: 0; bottom: 0; left: 0;z-index: 1000; overflow: auto;margin:2px">
+    <div style="padding: 20px; background:  #fff; margin: 40px;">
+       
+       <app-deleteuser *ngIf="popservice.showDeleteUser"></app-deleteuser>
+       <app-adduser *ngIf="popservice.showAddUser"></app-adduser>
+        <app-edituser *ngIf="popservice.showEditUser"></app-edituser>
+        <button type="button" (click)="onclose()" style=" float:inline-end ;font-size: 24px;margin-left: 10px;padding:3px">Cancel</button>
+    </div>
+        
+</div>
+<div style="position: fixed;top:0; right: 0; bottom: 0; left: 0;background-color: #000;opacity: 0.75; z-index: 900;"></div>
+</div>
+
