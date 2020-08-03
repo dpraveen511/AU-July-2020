@@ -7,8 +7,6 @@ public class BlockingQueueDemo {
     public static void main(String []args){
        Producer producer = new Producer();
        producer.start();
-       ExecutorService producerpool= Executors.newSingleThreadExecutor();
-       producerpool.execute(producer);
        final int noOfConsumers = 2;
        ExecutorService consumerpool = Executors.newCachedThreadPool();
        for (int i = 0; i < noOfConsumers; i++) {
