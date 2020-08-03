@@ -1,160 +1,143 @@
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
-public class BlockingQueueDemo {
-    public static void main(String []args){
-       Producer producer = new Producer();
-       producer.start();
-       final int noOfConsumers = 2;
-       ExecutorService consumerpool = Executors.newCachedThreadPool();
-       for (int i = 0; i < noOfConsumers; i++) {
-               Consumer c = new Consumer();
-               c.start();
-               consumerpool.execute(c);
-           }
-       }
-   }
+ class CustomBlockingQueue {
+
+  private List<Integer> queue;
+  public int  maxSize =10;
+  int count;
+
+  public CustomBlockingQueue(){
+
+      queue = new LinkedList<Integer>();
+  }
 
 
-// blocking queue
-class CustomBlockingQueue
-{
-    private static List queue =  new LinkedList();
-    private static final int limit = 10;
-    private static int value = 0;
-    // locking object
-    public static Object lock =  new Object();
-
-    static boolean put(){
-        if(queue.size() <= limit){
-            System.out.println("Inserting "+(value++) +" in queue at "+queue.size());
-            queue.add(value);
-            lock.notifyAll();
-            return true;
-        }
-        return false;
+  public synchronized void put(Integer item)  throws InterruptedException  {
+    if(count==maxSize){
+        System.out.println("Queue is full" );
+        this.wait();
     }
+    queue.add(item);
+    System.out.println("produced:"+item);
+   
+    ++count;
+      this.notifyAll();
+      
+  }
 
-    static boolean take(){
-        if(queue.size() > 0){
-            System.out.println("Deleting "+(value--)+" from queue at "+queue.size());
-            queue.remove(0);
-            lock.notify();
-            return true;
-        }
-        return false;
-    }
-}
 
-// producer thread
-class Producer extends Thread
-{
-    public void run(){
-        while(true)
-        {
-            synchronized (CustomBlockingQueue.lock) {
-            System.out.print(this.getName()+" : ");
-            if(!CustomBlockingQueue.put()){
-                System.out.println("Queue is full.");
-                try {
-                 CustomBlockingQueue.lock.wait();
-                } catch(InterruptedException e) {
-                 System.out.println(e.getMessage());
-                 }
-                }
-            }
-        }
-    }
+  public synchronized Integer take()  throws InterruptedException{
+
+      //waits element is available or not.
+      if(queue.size() == 0) {
+          System.out.println("Queue is empty .wait");
+          this.wait();
+      }
+      
+    --count;
+      //element is available, remove element and notify all waiting threads.
+      this.notifyAll();
+      return queue.remove(0);
+
+  }
 }
 
 
-//consumer thread
-class Consumer extends Thread{
-    public void run(){
-    while(true){
-         synchronized (CustomBlockingQueue.lock) {
-         System.out.print(this.getName()+" - ");
-         if(!CustomBlockingQueue.take()){
-            System.out.println("Queue is empty.");
-            try {
-                 CustomBlockingQueue.lock.wait();
-                } catch(InterruptedException e) {
-                     System.out.println(e.getMessage());
-                    }
-                }
-            }
-        }
+class Producer1 implements Runnable{
+    private CustomBlockingQueue customBlockingQueue;
+ 
+	public Producer1(CustomBlockingQueue customBlockingQueue){
+		this.customBlockingQueue = customBlockingQueue;
+	}
+	@Override
+	public void run() {
+		for (int i = 1; i <= 20; i++) {
+			try {
+				customBlockingQueue.put(i);                            
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+}
+class Consumer1 implements Runnable {
+	private CustomBlockingQueue customBlockingQueue;
+ 
+	public Consumer1(CustomBlockingQueue customBlockingQueue){
+		this.customBlockingQueue = customBlockingQueue;
+	}
+	@Override
+	public void run() {
+		for (int i = 1; i <= 10; i++) {
+			try {
+				System.out.println("Consumed by"+Thread.currentThread().getName()+":"+customBlockingQueue.take());               
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+ 
+}
+ class CustomBlockingQueueTest{
+    public static void main(String[] args) {
+        CustomBlockingQueue customQueue = new CustomBlockingQueue();
+        Thread p = new Thread(new Producer1(customQueue));
+        Thread c1 = new Thread(new Consumer1(customQueue));
+        Thread c2 = new Thread(new Consumer1(customQueue));
+        Thread c3 = new Thread(new Consumer1(customQueue));
+         
+		c1.start();
+        p.start();
+        c2.start();
+        c3.start();
+
+ 
     }
 }
 
-//Ouput
-// Thread-0 : Inserting 0 in queue at 0
-// Thread-0 : Inserting 1 in queue at 1
-// Thread-0 : Inserting 2 in queue at 2
-// Thread-0 : Inserting 3 in queue at 3
-// Thread-0 : Inserting 4 in queue at 4
-// Thread-0 : Inserting 5 in queue at 5
-// Thread-0 : Inserting 6 in queue at 6
-// Thread-0 : Inserting 7 in queue at 7
-// Thread-0 : Inserting 8 in queue at 8
-// Thread-0 : Inserting 9 in queue at 9
-// Thread-0 : Inserting 10 in queue at 10
-// Thread-0 : Queue is full.
-// Thread-0 : Queue is full.
-// Thread-2 - Deleting 11 from queue at 11
-// Thread-2 - Deleting 10 from queue at 10
-// Thread-2 - Deleting 9 from queue at 9
-// Thread-2 - Deleting 8 from queue at 8
-// Thread-2 - Deleting 7 from queue at 7
-// Thread-2 - Deleting 6 from queue at 6
-// Thread-2 - Deleting 5 from queue at 5
-// Thread-2 - Deleting 4 from queue at 4
-// Thread-2 - Deleting 3 from queue at 3
-// Thread-1 - Deleting 2 from queue at 2
-// Thread-1 - Deleting 1 from queue at 1
-// Thread-1 - Queue is empty.
-// Thread-2 - Queue is empty.
-// Thread-1 - Queue is empty.
-// Thread-2 - Queue is empty.
-// Thread-0 : Inserting 0 in queue at 0
-// Thread-0 : Inserting 1 in queue at 1
-// Thread-0 : Inserting 2 in queue at 2
-// Thread-0 : Inserting 3 in queue at 3
-// Thread-0 : Inserting 4 in queue at 4
-// Thread-0 : Inserting 5 in queue at 5
-// Thread-0 : Inserting 6 in queue at 6
-// Thread-0 : Inserting 7 in queue at 7
-// Thread-2 - Deleting 8 from queue at 8
-// Thread-2 - Deleting 7 from queue at 7
-// Thread-2 - Deleting 6 from queue at 6
-// Thread-2 - Deleting 5 from queue at 5
-// Thread-2 - Deleting 4 from queue at 4
-// Thread-2 - Deleting 3 from queue at 3
-// Thread-2 - Deleting 2 from queue at 2
-// Thread-2 - Deleting 1 from queue at 1
-// Thread-2 - Queue is empty.
-// Thread-1 - Queue is empty.
-// Thread-2 - Queue is empty.
-// Thread-1 - Queue is empty.
-// Thread-0 : Inserting 0 in queue at 0
-// Thread-0 : Inserting 1 in queue at 1
-// Thread-0 : Inserting 2 in queue at 2
-// Thread-0 : Inserting 3 in queue at 3
-// Thread-0 : Inserting 4 in queue at 4
-// Thread-0 : Inserting 5 in queue at 5
-// Thread-0 : Inserting 6 in queue at 6
-// Thread-0 : Inserting 7 in queue at 7
-// Thread-0 : Inserting 8 in queue at 8
-// Thread-0 : Inserting 9 in queue at 9
-// Thread-0 : Inserting 10 in queue at 10
-// Thread-0 : Queue is full.
-// Thread-0 : Queue is full.
-// Thread-1 - Deleting 11 from queue at 11
-// Thread-2 - Deleting 10 from queue at 10
-// Thread-2 - Deleting 9 from queue at 9
-// Thread-1 - Deleting 8 from queue at 8
-// Thread-1 - Deleting 7 from queue at 7
-// Thread-1 - Deleting 6 from queue at 6
-// Thread-1 - Deleting 5 from queue at 5
+// //Output
+// produced:1
+// produced:2
+// produced:3
+// Consumed byThread-3:1
+// produced:4
+// Consumed byThread-1:2
+// Consumed byThread-2:3
+// produced:5
+// produced:6
+// produced:7
+// produced:8
+// produced:9
+// produced:10
+// produced:11
+// produced:12
+// produced:13
+// Queue is full
+// Consumed byThread-3:4
+// produced:14
+// Queue is full
+// Consumed byThread-3:5
+// produced:15
+// Consumed byThread-1:6
+// Consumed byThread-2:7
+// produced:16
+// produced:17
+// Queue is full
+// Consumed byThread-3:8
+// produced:18
+// Queue is full
+// Consumed byThread-3:9
+// Consumed byThread-1:11
+// produced:19
+// produced:20
+// Consumed byThread-2:10
+// Consumed byThread-3:12
+// Consumed byThread-1:13
+// Consumed byThread-3:14
+// Consumed byThread-2:15
+// Consumed byThread-3:17
+// Consumed byThread-1:16
+// Consumed byThread-3:18
+// Consumed byThread-2:19
+// Consumed byThread-1:20
