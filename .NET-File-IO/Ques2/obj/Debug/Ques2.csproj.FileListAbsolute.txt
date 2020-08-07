@@ -1,0 +1,7 @@
+C:\Users\proll\source\repos\Ques2\obj\Debug\Ques2.csprojAssemblyReference.cache
+C:\Users\proll\source\repos\Ques2\obj\Debug\Ques2.csproj.CoreCompileInputs.cache
+C:\Users\proll\source\repos\Ques2\bin\Debug\Ques2.exe.config
+C:\Users\proll\source\repos\Ques2\bin\Debug\Ques2.exe
+C:\Users\proll\source\repos\Ques2\bin\Debug\Ques2.pdb
+C:\Users\proll\source\repos\Ques2\obj\Debug\Ques2.exe
+C:\Users\proll\source\repos\Ques2\obj\Debug\Ques2.pdb
